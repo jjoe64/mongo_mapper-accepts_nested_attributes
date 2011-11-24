@@ -13,16 +13,10 @@ module MongoMapper
         options.assert_valid_keys(:allow_destroy, :reject_if)
 
 
-        for association_name in attr_names
-          if associations.any? { |key, value| key == association_name.to_s }
-            module_eval %{
-              def #{association_name}_attributes=(attributes)
-                assign_nested_attributes_for_association(:#{association_name}, attributes, #{options[:allow_destroy]})
-              end
-              }, __FILE__, __LINE__
-            else
-              raise ArgumentError, "No association found for name `#{association_name}'. Has it been defined yet?"
-            end
+        (attr_names||[]).each do |association|
+          # should do a fake nested attributes
+          define_method :"#{association}_attributes=" do |*args|
+            self.send :"#{association}=", *args
           end
         end
 
