@@ -4,4 +4,5 @@ Gem::Specification.new do |s|
 	s.version     = '0.0.5'
 	s.summary     = 'hack.'
 	s.description = ''
+	s.author = 'jonas'
 end
