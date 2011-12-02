@@ -8,18 +8,22 @@ module MongoMapper
 
     module ClassMethods
       def accepts_nested_attributes_for(*attr_names)
-        options = { :allow_destroy => false }
-        options.update(attr_names.extract_options!)
-        options.assert_valid_keys(:allow_destroy, :reject_if)
+        begin
+          options = { :allow_destroy => false }
+          options.update(attr_names.extract_options!)
+          options.assert_valid_keys(:allow_destroy, :reject_if)
 
 
-        (attr_names||[]).each do |association|
-          # should do a fake nested attributes
-          define_method :"#{association}_attributes=" do |*args|
-            self.send :"#{association}=", *args
+          (attr_names||[]).each do |association|
+            # should do a fake nested attributes
+            define_method :"#{association}_attributes=" do |*args|
+              self.send :"#{association}=", *args
+            end
           end
+        rescue
+          return
         end
-
+      end
     end
 
     module InstanceMethods
